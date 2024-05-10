@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"html/template"
 
-	bsky "jordanreger.com/bsky/api"
+	"jordanreger.com/bsky"
 )
 
 func GetListPage(list bsky.List) string {

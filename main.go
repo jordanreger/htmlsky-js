@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 
-	bsky "jordanreger.com/bsky/api"
+	"jordanreger.com/bsky"
 	"jordanreger.com/bsky/util"
 )
 
