@@ -13,4 +13,4 @@ Edit `fly.toml` to fit your needs.
 
 ## Contributing
 
-Send patches/bug reports to <~jordanreger/public-inbox@lists.sr.ht>
+Send patches/bug reports to <~jordanreger/htmlsky-devel@lists.sr.ht>
