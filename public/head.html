@@ -10,15 +10,7 @@
   <meta property="og:url" content="/profile/{{.Handle}}" />
   <meta property="og:image" content="{{.Avatar}}" />
   <meta property="og:description" content="{{.Description}}" />
-  <style>
-    :root {
-      color-scheme: light dark;
-    }
-
-    img {
-      max-width: 100%;
-    }
-  </style>
+  <link rel="stylesheet" href="/style.css">
 </head>
 {{end}}
 
@@ -31,16 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="/profile/{{.Post.Author.Handle}}/post/{{.Post.RKey}}" />
   <meta property="og:description" content="{{.Post.Record.Text}}" />
-  <style>
-    :root {
-      color-scheme: light dark;
-    }
-
-    img {
-      max-width: 100%;
-    }
-  </style>
-
+  <link rel="stylesheet" href="/style.css">
 </head>
 {{end}}
 
@@ -53,16 +36,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="/profile/{{.Creator.Handle}}/lists/{{.RKey}}" />
   <meta property="og:description" content="{{.Description}}" />
-  <style>
-    :root {
-      color-scheme: light dark;
-    }
-
-    img {
-      max-width: 100%;
-    }
-  </style>
-
+  <link rel="stylesheet" href="/style.css">
 </head>
 {{end}}
 
@@ -70,7 +44,7 @@
 <!-- you can change this if you want -->
 
 <head>
-  <base href="https://htmlsky.app" target="_blank">
+  <base href="https://htmlsky.fly.dev" target="_blank">
 </head>
 <style>
   header {
