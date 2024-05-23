@@ -6,7 +6,7 @@
     {{if .Post.Embed.External.Thumb}}<img src="{{.Post.Embed.External.Thumb}}" alt="External Embed image">{{end}}
     {{if .Post.Embed.External.Title}}
     <h3 style="text-overflow: ellipsis;">{{.Post.Embed.External.Title}}</h3>
-    <p>{{.Post.Embed.External.Description}}</p>
+    <p style="text-overflow: ellipsis;">{{.Post.Embed.External.Description}}</p>
     {{else}}
     <h3>{{.Post.Embed.External.URI}}</h3>
     {{end}}
