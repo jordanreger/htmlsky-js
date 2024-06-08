@@ -2,7 +2,7 @@ image: alpine/edge
 packages:
   - curl
 secrets:
-  - e43071f0-e545-4076-ab7d-8891a400343e
+  - 156cbb78-ab98-46a6-8b2a-6c74714ec4b9
 sources:
   - https://git.sr.ht/~jordanreger/htmlsky
 tasks:
