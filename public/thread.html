@@ -1,18 +1,20 @@
 {{define "thread"}}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 {{template "thread_head" .}}
+
 <body>
-    {{template "thread_header" .}}
+  {{template "thread_header" .}}
 
-    <!-- main post -->
-    {{template "post" .}}
+  <!-- main post -->
+  {{template "post" .}}
 
-    <span id="replies"></span>
-    {{range .Replies}}
-        {{template "post_reply" .}}
-    {{end}}
+  <span id="replies"></span>
+  {{range .Replies}}
+  {{template "post_reply" .}}
+  {{end}}
 </body>
+
 </html>
 {{end}}
 
