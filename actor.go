@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"html/template"
 
-	"jordanreger.com/bsky"
+	"git.sr.ht/~jordanreger/bsky"
 )
 
 func GetActorPage(actor bsky.Actor) string {

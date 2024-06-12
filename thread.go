@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"html/template"
 
-	"jordanreger.com/bsky"
+	"git.sr.ht/~jordanreger/bsky"
 )
 
 func GetThreadPage(thread bsky.Thread) string {

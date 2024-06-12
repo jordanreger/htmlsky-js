@@ -8,8 +8,8 @@ import (
 	"log"
 	"net/http"
 
-	"jordanreger.com/bsky"
-	"jordanreger.com/bsky/util"
+	"git.sr.ht/~jordanreger/bsky"
+	"git.sr.ht/~jordanreger/bsky/util"
 )
 
 var host = "htmlsky.app"

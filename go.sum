@@ -1,6 +1,4 @@
-jordanreger.com/bsky v0.0.0-20240510170850-b67a96fdf40a h1:SbJj5pS1ghuFmb7imN95o73I3OxAX6bPYoa5/J0dLfM=
-jordanreger.com/bsky v0.0.0-20240510170850-b67a96fdf40a/go.mod h1:i306xh7szpho8mJBAP7z7zR8+OjH74dvhEXv6ReGdNY=
-jordanreger.com/bsky v0.0.0-20240523194006-e3e58066e4fb h1:KIjpWa1RToPI2UoGwY7/1NPmJD+2beAmKHEF3bwwVpI=
-jordanreger.com/bsky v0.0.0-20240523194006-e3e58066e4fb/go.mod h1:i306xh7szpho8mJBAP7z7zR8+OjH74dvhEXv6ReGdNY=
-jordanreger.com/bsky/util v0.0.0-20240508231046-0413e632a573 h1:LCdRBHq3+1z6Y9STkUsAlZj+VdzSysGe3ahPbMZLnP0=
-jordanreger.com/bsky/util v0.0.0-20240508231046-0413e632a573/go.mod h1:qGCb++h6UadQVB7GcWjxd9EpOSPNA0Jf16FUkpxXK48=
+git.sr.ht/~jordanreger/bsky v0.0.0-20240531012515-2b9e82c7e6de h1:5r6ugoyLOXkU+HHNnh54e4roP68rGiz+jhe9UT51eb8=
+git.sr.ht/~jordanreger/bsky v0.0.0-20240531012515-2b9e82c7e6de/go.mod h1:J/wrtw5XGVMT3+9Pm6FKrRjLP17qOihtY56wChr2LMs=
+git.sr.ht/~jordanreger/bsky/util v0.0.0-20240531012515-2b9e82c7e6de h1:2wOo/o1/adY7P4Z0ychuFY3esnhyZQQT0jwXzIqBLVU=
+git.sr.ht/~jordanreger/bsky/util v0.0.0-20240531012515-2b9e82c7e6de/go.mod h1:dFIWBF2o6TH0V3jKU+F4Zbve24lXSk0Yu6WfdEtaBLQ=
