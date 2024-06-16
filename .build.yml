@@ -1,18 +1,16 @@
-image: alpine/edge
+image: alpine/latest
 packages:
-  - curl
-secrets:
-  - 156cbb78-ab98-46a6-8b2a-6c74714ec4b9
+  - unzip
 sources:
-  - https://git.sr.ht/~jordanreger/htmlsky
+  - https://git.sr.ht/~jordanreger/htmlsky#ts
+environment:
+  DENO_INSTALL: /home/build/.deno
+  PATH: $DENO_INSTALL/bin:$PATH
 tasks:
-  - install-flyctl: |
-      curl -L https://fly.io/install.sh | sh
+  - install-deno: |
+      curl -fsSL https://deno.land/x/install/install.sh | sh
+  - install-deployctl: |
+      deno install -Arf jsr:@deno/deployctl
   - deploy: |
-      set +x
-      export FLY_API_TOKEN=$(cat ~/.fly_token)
-      set -x
-
-      export FLYCTL_INSTALL="/home/build/.fly"
-      export PATH="$FLYCTL_INSTALL/bin:$PATH"
-      flyctl deploy --remote-only ./htmlsky
+      cd htmlsky
+      deployctl deploy
