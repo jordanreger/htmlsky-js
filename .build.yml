@@ -1,15 +1,21 @@
 image: alpine/latest
 packages:
   - unzip
+  - git
 sources:
-  - https://git.sr.ht/~jordanreger/htmlsky#ts
+  - https://git.sr.ht/~jordanreger/htmlsky
 environment:
   DENO_INSTALL: /home/build/.deno
   PATH: $DENO_INSTALL/bin:$PATH
 tasks:
+  - checkout-ts: |
+      cd htmlsky
+      git checkout -q ts
+      git submodule update --init --recursive
   - install-deno: |
       curl -fsSL https://deno.land/x/install/install.sh | sh
   - install-deployctl: |
       deno install -Arf jsr:@deno/deployctl
   - deploy: |
+      cd htmlsky
       deployctl deploy
