@@ -6,7 +6,7 @@ packages:
 secrets:
   - 1395de5b-a4f1-452a-9825-5e82a18d656c
 sources:
-  - https://git.sr.ht/~jordanreger/htmlsky#ts
+  - https://git.sr.ht/~jordanreger/htmlsky
 tasks:
   - install-deployctl: |
       deno install -Arf jsr:@deno/deployctl
