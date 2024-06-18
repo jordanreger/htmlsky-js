@@ -4,13 +4,14 @@ import sanitizeHtml from "npm:sanitize-html";
 import { GetDescriptionFacets } from "../../facets.ts";
 
 // Components
-import { ActorHeader } from "../header.tsx";
+import { ActorHeader, Head } from "../mod.ts";
 
 export async function Actor(
   { actor }: { actor: AppBskyActorDefs.ProfileViewDetailed },
 ) {
   return (
     <>
+      <Head />
       <ActorHeader {...actor} />
       <table draggable={false}>
         <tr>

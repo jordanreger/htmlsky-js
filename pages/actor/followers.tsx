@@ -3,6 +3,7 @@ import { AppBskyActorDefs /*AppBskyFeedDefs*/ } from "npm:@atproto/api";
 
 // import { GetDescriptionFacets } from "../../facets.ts";
 import { agent } from "../../main.tsx";
+import { Head } from "../mod.ts";
 
 export async function ActorFollowers(
   { actor }: { actor: AppBskyActorDefs.ProfileViewDetailed },
@@ -25,6 +26,7 @@ export async function ActorFollowers(
   });
   return (
     <>
+      <Head />
       <header>
         <a href="..">Back</a>&nbsp;
         <span>
