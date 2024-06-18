@@ -7,7 +7,7 @@
     "jsxImportSource": "https://esm.sh/preact@10.22.0"
   },
   "deploy": {
-    "project": "de31f9a6-b61d-4c66-b006-a781955361ed",
+    "project": "htmlsky",
     "exclude": [
       "**/node_modules"
     ],
