@@ -38,9 +38,11 @@ export async function Actor(
               <span
                 dangerouslySetInnerHTML={{
                   __html: actor.displayName
-                    ? actor.displayName.replaceAll(" ", " <wbr>")!.match(
-                      /.{1,7}/g,
-                    )!.join("<wbr>")
+                    ? (actor.displayName.includes(" ")
+                      ? actor.displayName.replaceAll(" ", " <wbr>")
+                      : actor.displayName.match(
+                        /.{1,7}/g,
+                      )!.join("<wbr>"))
                     : actor.handle.replaceAll(".", ".<wbr>"),
                 }}
               >
