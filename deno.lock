@@ -179,6 +179,8 @@
   "remote": {
     "https://esm.sh/preact@10.22.0/jsx-runtime": "c6185b52c1673f9d309dd6046051e9b6c034f14858bef62ea2a9fe9ef1ea2201",
     "https://esm.sh/stable/preact@10.22.0/denonext/jsx-runtime.js": "de60943799b1cbe6066c4f83f4ca71ef37011d7f5be7bef58ed980e8ff3f996a",
-    "https://esm.sh/stable/preact@10.22.0/denonext/preact.mjs": "20c9563e051dd66e053d3afb450f61b48f2fa0d0ce4f69f8f0a2f23c1ef090da"
+    "https://esm.sh/stable/preact@10.22.0/denonext/preact.mjs": "20c9563e051dd66e053d3afb450f61b48f2fa0d0ce4f69f8f0a2f23c1ef090da",
+    "https://esm.sh/stable/preact@10.22.0/denonext/src.js": "8674e09926d897489892eae52e43d0ce884adbadc31b3042817fdba381241be1",
+    "https://esm.sh/v128/preact@10.22.0/src/index.js": "563764be8932b6b9526f92768de869b17d6ad66f189aa16ddccb343bd600ea34"
   }
 }
