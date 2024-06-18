@@ -12,6 +12,6 @@
       "**/node_modules"
     ],
     "include": [],
-    "entrypoint": "main.ts"
+    "entrypoint": "main.tsx"
   }
 }
