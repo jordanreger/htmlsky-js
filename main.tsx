@@ -48,19 +48,30 @@ Deno.serve({
     const page = profilePagePattern.exec(url)?.pathname.groups.page;
 
     if (page === "followers") {
-      // TODO: followers list
       return new Response(
-        await renderToStringAsync(await pages.ActorFollowers({ actor: actor })),
+        await renderToStringAsync(
+          await pages.ActorFollowers({ url: url, actor: actor }),
+        ),
         headers,
       );
     }
     if (page === "follows") {
-      // TODO: follows list
       return new Response(
-        await renderToStringAsync(await pages.ActorFollows({ actor: actor })),
+        await renderToStringAsync(
+          await pages.ActorFollows({ url: url, actor: actor }),
+        ),
         headers,
       );
     }
+
+    /*if (page === "posts") {
+      return new Response(
+        await renderToStringAsync(
+          await pages.ActorFeed({ url: url, actor: actor }),
+        ),
+        headers,
+      );
+    }*/
   }
 
   return Response.redirect(

@@ -1,6 +1,5 @@
 import { AppBskyActorDefs /*AppBskyFeedDefs*/ } from "npm:@atproto/api";
 import sanitizeHtml from "npm:sanitize-html";
-import { render } from "npm:preact-render-to-string";
 
 import { GetDescriptionFacets } from "../../facets.ts";
 
@@ -12,7 +11,11 @@ export async function Actor(
 ) {
   return (
     <>
-      <Head />
+      <Head
+        title={actor.displayName
+          ? actor.displayName + ` (@${actor.handle})`
+          : `@${actor.handle}`}
+      />
       <ActorHeader {...actor} />
       <table draggable={false}>
         <tr>
@@ -37,13 +40,7 @@ export async function Actor(
             <h1>
               <span
                 dangerouslySetInnerHTML={{
-                  __html: actor.displayName
-                    ? (actor.displayName.includes(" ")
-                      ? actor.displayName.replaceAll(" ", " <wbr>")
-                      : actor.displayName.match(
-                        /.{1,7}/g,
-                      )!.join("<wbr>"))
-                    : actor.handle.replaceAll(".", ".<wbr>"),
+                  __html: actor.displayName ? actor.displayName : actor.handle,
                 }}
               >
               </span>

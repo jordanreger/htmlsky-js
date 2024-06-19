@@ -6,33 +6,58 @@ import { agent } from "../../main.tsx";
 import { Head } from "../mod.ts";
 
 export async function ActorFollows(
-  { actor }: { actor: AppBskyActorDefs.ProfileViewDetailed },
+  { url, actor }: { url: URL; actor: AppBskyActorDefs.ProfileViewDetailed },
 ) {
-  // TODO: implement cursor
+  let cursor = url.searchParams.get("cursor")!;
 
   const follows: AppBskyActorDefs.ProfileViewDetailed[] = await agent.api.app
-    .bsky.graph.getFollows({ actor: actor.did }).then((res) => res.data).then(
-      (res) => res.follows,
+    .bsky.graph.getFollows({ actor: actor.did, cursor: cursor }).then((res) =>
+      res.data
+    ).then(
+      (res) => {
+        cursor = res.cursor!;
+        return res.follows;
+      },
     );
 
   const followList: preact.VNode[] = [];
 
   follows.forEach((follow) => {
     followList.push(
-      <li>
-        <a href={`/profile/${follow.did}`}>{follow.handle}</a>
-      </li>,
+      <p>
+        <b>{follow.displayName ? follow.displayName : follow.handle}</b>
+        <br />{" "}
+        <a
+          href={`/profile/${
+            follow.handle !== "handle.invalid" ? follow.handle : follow.did
+          }/`}
+        >
+          @{follow.handle}
+        </a>
+      </p>,
     );
   });
+
+  if (cursor) {
+    followList.push(<a href={`?cursor=${cursor}`}>Next page</a>);
+  }
+
   return (
     <>
-      <Head />
-      <a href="..">Back</a>&nbsp;
-      <span>
-        {actor.displayName ? actor.displayName : actor.handle}'s Follows
-      </span>
-      <hr />
-      <ul>{followList}</ul>
+      <Head title={`People followed by @${actor.handle}`} />
+      <header>
+        <a href="..">Back</a>&nbsp;
+        <span>
+          <b>
+            <i>
+              {actor.displayName ? actor.displayName : actor.handle}'s Follows
+            </i>
+          </b>
+        </span>
+
+        <hr />
+      </header>
+      {followList}
     </>
   );
 }
