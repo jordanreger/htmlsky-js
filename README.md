@@ -10,5 +10,4 @@ HTMLsky has an account for all announcements, notifications, and other communica
 
 ## Contributing
 
-Send patches/bug reports to
-[~jordanreger/public-inbox@lists.sr.ht](mailto:~jordanreger/public-inbox@lists.sr.ht?subject=[PATCH] htmlsky)
+Send patches/bug reports to <~jordanreger/public-inbox@lists.sr.ht> with the subject `[PATCH] htmlsky`
