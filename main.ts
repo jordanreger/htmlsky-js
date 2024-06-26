@@ -1,4 +1,6 @@
-Deno.serve((req) => {
+import Profile from "./profile.ts";
+
+Deno.serve(async (req) => {
   const url = new URL(req.url);
   const path = url.pathname;
 
@@ -12,8 +14,11 @@ Deno.serve((req) => {
   /* Profile  */
   const profilePattern = new URLPattern({ pathname: "/profile/:actor/" });
   if (profilePattern.test(url)) {
-    const actorName = profilePattern.exec(url)?.pathname.groups.actor;
-    return new Response(actorName, headers);
+    const actorName = profilePattern.exec(url)?.pathname.groups.actor!;
+
+    const profile = new Profile(actorName);
+
+    return new Response(await profile.generateProfile(), headers);
   }
 
   /* Redirect to homepage */
