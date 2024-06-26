@@ -1,4 +1,4 @@
-import Profile from "./profile.ts";
+import Actor from "./profile.ts";
 
 Deno.serve(async (req) => {
   const url = new URL(req.url);
@@ -16,9 +16,9 @@ Deno.serve(async (req) => {
   if (profilePattern.test(url)) {
     const actorName = profilePattern.exec(url)?.pathname.groups.actor!;
 
-    const profile = new Profile(actorName);
+    const actor = new Actor(actorName);
 
-    return new Response(await profile.generateProfile(), headers);
+    return new Response(await actor.generateActor(), headers);
   }
 
   /* Redirect to homepage */

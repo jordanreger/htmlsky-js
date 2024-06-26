@@ -3,15 +3,15 @@ import Page from "./page.ts";
 
 const agent = new AtpAgent({ service: "https://public.api.bsky.app" });
 
-export default class Profile extends Page {
+export default class Actor extends Page {
   handle: string;
 
   constructor(handle: string) {
-    super();
+    super(handle);
     this.handle = handle;
   }
 
-  async generateProfile() {
+  async generateActor() {
     const { data } = await agent.api.app.bsky.actor.getProfile({
       actor: this.handle,
     });
@@ -37,15 +37,13 @@ export default class Profile extends Page {
                         <sup><sup><small><small>@${handle}</small></small></sup></sup>
                       </h1>
                     </nobr>
-                    <small>
-                      <span>
-                        <nobr>
-                        Followers <strong>${followersCount}</strong>&nbsp;
-                        Following <strong>${followsCount}</strong>&nbsp;
-                        Posts <strong>${postsCount}</strong>
-                        </nobr>
-                      </span>
-                    <small>
+                    <span>
+                      <nobr>
+                      Followers <strong>${followersCount}</strong>&nbsp;
+                      Following <strong>${followsCount}</strong>&nbsp;
+                      Posts <strong>${postsCount}</strong>
+                      </nobr>
+                    </span>
                   </td>
                   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                   <td valign="bottom" align="left">
