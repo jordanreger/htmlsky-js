@@ -7,8 +7,9 @@ export default class Actor extends Page {
   handle: string;
 
   constructor(handle: string) {
-    super(handle);
+    super();
     this.handle = handle;
+    this.generateActor();
   }
 
   async generateActor() {
@@ -24,7 +25,8 @@ export default class Actor extends Page {
       postsCount,
     } = data;
 
-    return `
+    super.appendHTML(super.generateStart(this.handle));
+    super.appendHTML(`
       <div class="profile">
         <table width="95%" cellspacing="0" cellpadding="0">
           <tr>
@@ -56,6 +58,9 @@ export default class Actor extends Page {
           </tr>
         </table>
       </div>
-    `;
+      </body>
+      </html>
+    `);
+    super.appendHTML(super.generateEnd());
   }
 }

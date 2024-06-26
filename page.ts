@@ -1,9 +1,28 @@
 export default class Page {
-  handle: string;
+  protected page: string = "";
 
-  constructor(handle: string) {
-    this.handle = handle;
+  appendHTML (html: string) {
+    this.page += html;
   }
 
-  generatePage
+  showPage (): string {
+    return this.page;
+  }
+
+  generateStart(handle: string) {
+    return `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="color-scheme" content="light dark">
+        <title>${handle}</title>
+      </head>
+    `;
+  }
+
+  generateEnd() {
+    return `</html>`
+  }
 }
