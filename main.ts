@@ -18,6 +18,7 @@ Deno.serve(async (req) => {
 
     const actor = new Actor(actorName);
 
+    await actor.generateActor();
     return new Response(actor.showPage(), headers);
   }
 
