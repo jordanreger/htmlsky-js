@@ -1,4 +1,4 @@
-import Actor from "./profile.ts";
+import Actor from "./actor.ts";
 
 Deno.serve(async (req) => {
   const url = new URL(req.url);
