@@ -1,8 +1,12 @@
 import { renderToStringAsync } from "npm:preact-render-to-string";
 import { AtpAgent } from "npm:@atproto/api";
 
-// page imports
-import * as pages from "./pages/mod.ts";
+import {
+  Actor,
+  ActorFeed,
+  ActorFollowers,
+  ActorFollows,
+} from "./pages/actor.tsx";
 
 export const agent = new AtpAgent({ service: "https://public.api.bsky.app" });
 
@@ -29,7 +33,7 @@ Deno.serve({
       }).then((res) => res.data);
 
       return new Response(
-        await renderToStringAsync(await pages.Actor({ actor: actor })),
+        await renderToStringAsync(await Actor({ actor: actor })),
         headers,
       );
     } catch (e) {
@@ -50,7 +54,7 @@ Deno.serve({
     if (page === "followers") {
       return new Response(
         await renderToStringAsync(
-          await pages.ActorFollowers({ url: url, actor: actor }),
+          await ActorFollowers({ url: url, actor: actor }),
         ),
         headers,
       );
@@ -58,20 +62,20 @@ Deno.serve({
     if (page === "follows") {
       return new Response(
         await renderToStringAsync(
-          await pages.ActorFollows({ url: url, actor: actor }),
+          await ActorFollows({ url: url, actor: actor }),
         ),
         headers,
       );
     }
 
-    /*if (page === "posts") {
+    if (page === "posts") {
       return new Response(
         await renderToStringAsync(
-          await pages.ActorFeed({ url: url, actor: actor }),
+          await ActorFeed({ url: url, actor: actor }),
         ),
         headers,
       );
-    }*/
+    }
   }
 
   return Response.redirect(
