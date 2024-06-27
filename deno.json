@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno task clean && deno run -A --watch main.tsx",
+    "dev": "deno task clean && deno run -A --watch main.ts",
     "clean": "deno fmt && deno lint"
   },
   "compilerOptions": {
