@@ -34,6 +34,7 @@ export default class Actor {
     return `
     <head>
       <meta name="color-scheme" content="light dark">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>${actor.username} (@${actor.handle}) &#8212; HTMLsky</title>
     </head>
     <table>
@@ -48,15 +49,20 @@ export default class Actor {
 	</h1>
       </td>
     </tr>
-    ${actor.description ? `<tr>
+    ${
+      actor.description
+        ? `<tr>
       <td colspan="2">
-	<p>${await getDescriptionFacets(actor.description).then(res => res.replaceAll("\n", "<br>"))}</p>
+	<p>${await getDescriptionFacets(actor.description).then((res) =>
+          res.replaceAll("\n", "<br>")
+        )}</p>
       </td>
     </tr>
     <tr>
       <td colspan="2">&nbsp;</td>
     </tr>`
-    : ``}
+        : ``
+    }
     <tr>
       <td colspan="2">
 	<b>${actor.followersCount}</b> followers

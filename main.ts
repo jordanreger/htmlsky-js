@@ -31,7 +31,9 @@ Deno.serve(async (req) => {
     }
 
     // RAW PROFILE
-    const rawProfilePattern = new URLPattern({ pathname: "/raw/profile/:actor/" });
+    const rawProfilePattern = new URLPattern({
+      pathname: "/raw/profile/:actor/",
+    });
     if (rawProfilePattern.test(url)) {
       const actorName = rawProfilePattern.exec(url)?.pathname.groups.actor;
       const actor = new Actor(actorName);

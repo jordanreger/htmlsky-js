@@ -1,4 +1,4 @@
-import { AtpAgent, RichText } from "npm:@atproto/api";
+import { RichText } from "npm:@atproto/api";
 import { agent } from "./main.ts";
 
 export async function getDescriptionFacets(
