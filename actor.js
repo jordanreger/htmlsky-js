@@ -1,12 +1,5 @@
-import {
-  AppBskyActorDefs,
-  AppBskyFeedGetAuthorFeed,
-  AppBskyFeedPost,
-  AppBskyGraphGetFollowers,
-} from "npm:@atproto/api";
-
-import { agent } from "./main.ts";
-import { getDescriptionFacets } from "./facets.ts";
+import { agent } from "./main.js";
+import { getFacets, getDescriptionFacets } from "./facets.js";
 
 const DateTimeFormat = new Intl.DateTimeFormat("en-US", {
   dateStyle: "short",
@@ -16,10 +9,10 @@ const DateTimeFormat = new Intl.DateTimeFormat("en-US", {
 });
 
 export default class Actor {
-  uri: string;
-  actor: Promise<AppBskyActorDefs.ProfileViewDetailed>;
+  uri;
+  actor;
 
-  constructor(uri: string) {
+  constructor(uri) {
     this.uri = uri;
     this.actor = this.#get();
   }
@@ -31,13 +24,7 @@ export default class Actor {
     return actor;
   }
 
-  async Raw(): Promise<string> {
-    const actor = await this.actor;
-
-    return JSON.stringify(actor, null, 2);
-  }
-
-  async HTML(prevCursor?: string): Promise<string> {
+  async HTML(prevCursor) {
     const actor = await this.actor;
 
     actor.username = actor.displayName ? actor.displayName : actor.handle;
@@ -65,9 +52,7 @@ export default class Actor {
       actor.description
         ? `<tr>
       <td colspan="2">
-	<p>${await getDescriptionFacets(actor.description).then((res) =>
-          res.replaceAll("\n", "<br>")
-        )}</p>
+	<p>${await getDescriptionFacets(actor.description).then((res) => res.replaceAll("\n", "<br>"))}</p>
       </td>
     </tr>
     <tr>
@@ -88,68 +73,62 @@ export default class Actor {
     `;
   }
 
-  async Feed(prevCursor?: string): Promise<string> {
+  async Feed(prevCursor) {
     const actor = await this.actor;
-    let options: AppBskyFeedGetAuthorFeed.QueryParams = { actor: actor.did };
+    let options = { actor: actor.did };
     if (prevCursor) {
       options = { actor: actor.did, cursor: prevCursor };
     }
     const { data } = await agent.api.app.bsky.feed.getAuthorFeed(options);
     const { feed, cursor } = data;
 
-    const feedList: string[] = [];
-    feed.forEach((post) => {
-      const postAuthor = post.post.author,
-        reply = post.reply?.root,
-        record: AppBskyFeedPost.Record = post.post.record;
-      let replyAuthor: AppBskyActorDefs.ProfileView | undefined;
-      if (reply) replyAuthor = reply.author;
-      else replyAuthor = undefined;
-      console.log(post);
+    const feedList = [];
+
+    feed.forEach(async (post) => {
+      if (post.reply) {
+	const reply = post.reply.parent ? post.reply.parent : post.reply.root;
+	const author = reply.author;
+	if (reply.notFound || reply.blocked) {
+	  feedList.push(`
+	  <tr>
+	    <td>
+	      <table>
+		<tr><td>
+		  Post was deleted.
+		</td></tr>
+	      </table>
+	    </td>
+	  </tr>
+	  `);
+	} else {
+	  feedList.push(`
+	  <tr>
+	    <td>
+	      <table>
+		<tr><td><b>${reply.author.displayName ? reply.author.displayName : reply.author.handle}</b> (<a href="/profile/${reply.author.handle !== "handle.invalid" ? reply.author.handle : reply.author.did}/">@${reply.author.handle}</a>) &middot; ${DateTimeFormat.format(new Date(reply.record.createdAt))}</td></tr>
+		<tr><td>${/*await getFacets(*/reply.record.text/*).then((res) => res.replaceAll("\n", "<br>"))*/}</td></tr>
+		<tr><td><b>${reply.replyCount}</b> replies &middot; <b>${reply.repostCount}</b> reposts &middot; <b>${reply.likeCount}</b> likes</td></tr>
+	      </table>
+	    </td>
+	  </tr>
+	  `);
+	}
+      }
+
+      const record = post.post.record;
+      const author = post.post.author;
+
       feedList.push(`
       <tr>
 	<td>
-	${
-        reply
-          ? `
+	  ${post.reply ? `<blockquote>` : ``}
 	  <table>
-	  <tr><td><b>${
-            replyAuthor.displayName
-              ? replyAuthor.displayName
-              : replyAuthor.handle
-          }</b> (@<a href="/profile/${
-            replyAuthor.handle !== "handle.invalid"
-              ? replyAuthor.handle
-              : replyAuthor.did
-          }">${replyAuthor.handle}</a>)</td></tr>
-	  <tr><td>${reply.record.text}</td></tr>
-	  <tr><td>${DateTimeFormat.format(new Date(reply.record.createdAt))}</td></tr>
-	  <tr><td><br></td></tr>
-	</table>
-	<blockquote>
-	`
-          : ""
-      }
-	<table>
-	  ${
-        actor.did !== postAuthor.did
-          ? `<tr><td><i>Reposted by ${
-            actor.displayName ? actor.displayName : actor.handle
-          }</i></td></tr>`
-          : ``
-      }
-	  <tr><td><b>${
-        postAuthor.displayName ? postAuthor.displayName : postAuthor.handle
-      }</b> (@<a href="/profile/${
-        postAuthor.handle !== "handle.invalid"
-          ? postAuthor.handle
-          : postAuthor.did
-      }">${postAuthor.handle}</a>)</td></tr>
-	  <tr><td>${record.text}</td></tr>
-	  <tr><td>${DateTimeFormat.format(new Date(record.createdAt))}</td></tr>
-	  <tr><td><br></td></tr>
-	</table>
-	${post.reply ? "</blockquote>" : ""}
+	  ${actor.did !== author.did ? `<tr><td><i>Reposted by ${actor.displayName ? actor.displayName : actor.handle}</i></td></tr>` : ``}
+	  <tr><td><b>${author.displayName ? author.displayName : author.handle}</b> (<a href="/profile/${author.handle !== "handle.invalid" ? author.handle : author.did }/">@${author.handle}</a>) &middot; ${DateTimeFormat.format(new Date(record.createdAt))}</td></tr>
+	  <tr><td><p>${/*await getFacets(*/record.text/*).then((res) => res.replaceAll("\n", "<br>"))*/}</p></td></tr>
+	  <tr><td><b>${post.post.replyCount}</b> replies &middot; <b>${post.post.repostCount}</b> reposts &middot; <b>${post.post.likeCount}</b> likes</td></tr>
+	  </table>
+	  ${post.reply ? `</blockquote><hr>` : `<hr>`}
 	</td>
       </tr>
       `);
@@ -164,15 +143,15 @@ export default class Actor {
     }
 
     return `
-    <table>
+    <table width="100%">
       ${feedList.join("")}
     </table>
     `;
   }
 
-  async Followers(prevCursor?: string): Promise<string> {
+  async Followers(prevCursor) {
     const actor = await this.actor;
-    let options: AppBskyGraphGetFollowers.QueryParams = { actor: actor.did };
+    let options = { actor: actor.did };
     if (prevCursor) {
       options = { actor: actor.did, cursor: prevCursor };
     }
@@ -180,13 +159,11 @@ export default class Actor {
     const { data } = await agent.api.app.bsky.graph.getFollowers(options);
     const { followers, cursor } = data;
 
-    const followersList: string[] = [];
+    const followersList = [];
     followers.forEach((follower) => {
       followersList.push(`
       <tr>
-	<td><b>${
-        follower.displayName ? follower.displayName : follower.handle
-      }</b> (@${follower.handle})</td>
+	<td><b>${follower.displayName ? follower.displayName : follower.handle}</b> (<a href="/profile/${follower.handle !== "handle.invalid" ? follower.handle : follower.did}/">@${follower.handle}</a>)</td>
       </tr>`);
     });
 
@@ -199,6 +176,11 @@ export default class Actor {
     }
 
     return `
+    <head>
+      <meta name="color-scheme" content="light dark">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>People following @${actor.handle} &#8212; HTMLsky</title>
+    </head>
     <p><a href="..">Back</a></p>
     <table>
       ${followersList.join("")}
@@ -206,9 +188,9 @@ export default class Actor {
     `;
   }
 
-  async Follows(prevCursor?: string): Promise<string> {
+  async Follows(prevCursor) {
     const actor = await this.actor;
-    let options: AppBskyGraphGetFollowers.QueryParams = { actor: actor.did };
+    let options = { actor: actor.did };
     if (prevCursor) {
       options = { actor: actor.did, cursor: prevCursor };
     }
@@ -216,15 +198,11 @@ export default class Actor {
     const { data } = await agent.api.app.bsky.graph.getFollows(options);
     const { follows, cursor } = data;
 
-    const followsList: string[] = [];
+    const followsList = [];
     follows.forEach((follow) => {
       followsList.push(`
       <tr>
-	<td><b>${
-        follow.displayName ? follow.displayName : follow.handle
-      }</b> (<a href="/profile/${
-        follow.handle !== "handle.invalid" ? follow.handle : follow.did
-      }">@${follow.handle}</a>)</td>
+	<td><b>${follow.displayName ? follow.displayName : follow.handle}</b> (<a href="/profile/${follow.handle !== "handle.invalid" ? follow.handle : follow.did}/">@${follow.handle}</a>)</td>
       </tr>`);
     });
 
@@ -237,6 +215,11 @@ export default class Actor {
     }
 
     return `
+    <head>
+      <meta name="color-scheme" content="light dark">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>People followed by @${actor.handle} &#8212; HTMLsky</title>
+    </head>
     <p><a href="..">Back</a></p>
     <table>
       ${followsList.join("")}

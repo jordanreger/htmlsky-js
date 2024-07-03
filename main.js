@@ -1,7 +1,7 @@
 import { AtpAgent } from "npm:@atproto/api";
 import { serveDir, serveFile } from "jsr:@std/http/file-server";
 
-import Actor from "./actor.ts";
+import Actor from "./actor.js";
 
 export const agent = new AtpAgent({ service: "https://public.api.bsky.app" });
 
@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     const profilePattern = new URLPattern({ pathname: "/profile/:actor/" });
     if (profilePattern.test(url)) {
       const actorName = profilePattern.exec(url)?.pathname.groups.actor;
-      const actor = new Actor(actorName!);
+      const actor = new Actor(actorName);
       const cursor = query.get("cursor");
       if (cursor) return new Response(await actor.HTML(cursor), html_headers);
       else return new Response(await actor.HTML(), html_headers);
@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
     });
     if (rawProfilePattern.test(url)) {
       const actorName = rawProfilePattern.exec(url)?.pathname.groups.actor;
-      const actor = new Actor(actorName!);
+      const actor = new Actor(actorName);
 
       return new Response(await actor.Raw(), json_headers);
     }
@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
     if (pageProfilePattern.test(url)) {
       const actorName = pageProfilePattern.exec(url)?.pathname.groups.actor;
       const pageName = pageProfilePattern.exec(url)?.pathname.groups.page;
-      const actor = new Actor(actorName!);
+      const actor = new Actor(actorName);
 
       if (pageName === "followers") {
         const cursor = query.get("cursor");
@@ -85,12 +85,12 @@ Deno.serve(async (req) => {
   );
 });
 
-const html_headers: ResponseInit = {
+const html_headers = {
   "headers": {
     "Content-Type": "text/html;charset=utf-8",
   },
 };
-const json_headers: ResponseInit = {
+const json_headers = {
   "headers": {
     "Content-Type": "application/json;charset=utf-8",
   },

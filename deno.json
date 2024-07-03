@@ -1,10 +1,6 @@
 {
   "tasks": {
-    "dev": "deno task clean && deno run -A --watch main.ts",
+    "dev": "deno run -A --watch main.js",
     "clean": "deno fmt && deno lint"
-  },
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "npm:preact@10.22.0"
   }
 }
