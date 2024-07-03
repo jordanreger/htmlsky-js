@@ -12,6 +12,7 @@
       "jsr:@std/path@1.0.0-rc.2": "jsr:@std/path@1.0.0-rc.2",
       "jsr:@std/streams@^0.224.5": "jsr:@std/streams@0.224.5",
       "npm:@atproto/api": "npm:@atproto/api@0.12.8",
+      "npm:@atproto/xrpc": "npm:@atproto/xrpc@0.5.0",
       "npm:preact": "npm:preact@10.22.0",
       "npm:preact-render-to-string": "npm:preact-render-to-string@6.5.5_preact@10.22.0",
       "npm:preact@10.22.0": "npm:preact@10.22.0",
