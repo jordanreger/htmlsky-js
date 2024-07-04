@@ -84,7 +84,7 @@ export default class Actor {
 
     const feedList = [];
 
-    feed.forEach(async (post) => {
+    for (const post of feed) {
       if (post.reply) {
 	const reply = post.reply.parent ? post.reply.parent : post.reply.root;
 	const author = reply.author;
@@ -106,7 +106,7 @@ export default class Actor {
 	    <td>
 	      <table>
 		<tr><td><b>${reply.author.displayName ? reply.author.displayName : reply.author.handle}</b> (<a href="/profile/${reply.author.handle !== "handle.invalid" ? reply.author.handle : reply.author.did}/">@${reply.author.handle}</a>) &middot; ${DateTimeFormat.format(new Date(reply.record.createdAt))}</td></tr>
-		<tr><td>${/*await getFacets(*/reply.record.text/*).then((res) => res.replaceAll("\n", "<br>"))*/}</td></tr>
+		<tr><td>${await getFacets(reply.record.text).then((res) => res.replaceAll("\n", "<br>"))}</td></tr>
 		<tr><td><b>${reply.replyCount}</b> replies &middot; <b>${reply.repostCount}</b> reposts &middot; <b>${reply.likeCount}</b> likes</td></tr>
 	      </table>
 	    </td>
@@ -125,14 +125,17 @@ export default class Actor {
 	  <table>
 	  ${actor.did !== author.did ? `<tr><td><i>Reposted by ${actor.displayName ? actor.displayName : actor.handle}</i></td></tr>` : ``}
 	  <tr><td><b>${author.displayName ? author.displayName : author.handle}</b> (<a href="/profile/${author.handle !== "handle.invalid" ? author.handle : author.did }/">@${author.handle}</a>) &middot; ${DateTimeFormat.format(new Date(record.createdAt))}</td></tr>
-	  <tr><td><p>${/*await getFacets(*/record.text/*).then((res) => res.replaceAll("\n", "<br>"))*/}</p></td></tr>
+	  <tr><td><p>${await getFacets(record.text).then((res) => res.replaceAll("\n", "<br>"))}</p></td></tr>
+	  <tr><td>
+	  ${/*post.post.record.embed ? `<pre>${JSON.stringify(post.post.record.embed, null, 2)}</pre>` : */``}
+	  </td></tr>
 	  <tr><td><b>${post.post.replyCount}</b> replies &middot; <b>${post.post.repostCount}</b> reposts &middot; <b>${post.post.likeCount}</b> likes</td></tr>
 	  </table>
 	  ${post.reply ? `</blockquote><hr>` : `<hr>`}
 	</td>
       </tr>
       `);
-    });
+    }
 
     if (cursor) {
       feedList.push(`
@@ -141,6 +144,7 @@ export default class Actor {
       </tr>
       `);
     }
+
 
     return `
     <table width="100%">
@@ -160,12 +164,12 @@ export default class Actor {
     const { followers, cursor } = data;
 
     const followersList = [];
-    followers.forEach((follower) => {
+    for (const follower of followers) {
       followersList.push(`
       <tr>
 	<td><b>${follower.displayName ? follower.displayName : follower.handle}</b> (<a href="/profile/${follower.handle !== "handle.invalid" ? follower.handle : follower.did}/">@${follower.handle}</a>)</td>
       </tr>`);
-    });
+    }
 
     if (cursor) {
       followersList.push(`
@@ -199,12 +203,12 @@ export default class Actor {
     const { follows, cursor } = data;
 
     const followsList = [];
-    follows.forEach((follow) => {
+    for (const follow of follows) {
       followsList.push(`
       <tr>
 	<td><b>${follow.displayName ? follow.displayName : follow.handle}</b> (<a href="/profile/${follow.handle !== "handle.invalid" ? follow.handle : follow.did}/">@${follow.handle}</a>)</td>
       </tr>`);
-    });
+    }
 
     if (cursor) {
       followsList.push(`
