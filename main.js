@@ -30,30 +30,23 @@ Deno.serve(async (req) => {
 
   try {
     // PROFILE
-    const profilePattern = new URLPattern({ pathname: "/profile/:actor/" });
+    const profilePattern = new URLPattern({ pathname: "/profile/:identifier/:page?/" });
     if (profilePattern.test(url)) {
-      const actorName = profilePattern.exec(url)?.pathname.groups.actor;
-      const actor = new Actor(actorName);
+      const identifier = profilePattern.exec(url)?.pathname.groups.identifier,
+      			page = profilePattern.exec(url)?.pathname.groups.page;
+
+      // TODO: move API calls out
+
+      const actor = new Actor(identifier);
       const cursor = query.get("cursor");
+
+      // TODO: move pages here
+
       if (cursor) return new Response(await actor.HTML(cursor), html_headers);
       else return new Response(await actor.HTML(), html_headers);
     }
 
-    // RAW PROFILE
-    const rawProfilePattern = new URLPattern({
-      pathname: "/raw/profile/:actor/",
-    });
-    if (rawProfilePattern.test(url)) {
-      const actorName = rawProfilePattern.exec(url)?.pathname.groups.actor;
-      const actor = new Actor(actorName);
-
-      return new Response(await actor.Raw(), json_headers);
-    }
-
-    // FOLLOWERS, FOLLOWING
-    const pageProfilePattern = new URLPattern({
-      pathname: "/profile/:actor/:page/",
-    });
+    /*
     if (pageProfilePattern.test(url)) {
       const actorName = pageProfilePattern.exec(url)?.pathname.groups.actor;
       const pageName = pageProfilePattern.exec(url)?.pathname.groups.page;
@@ -72,6 +65,7 @@ Deno.serve(async (req) => {
         } else return new Response(await actor.Follows(), html_headers);
       }
     }
+    */
   } catch (error) {
     return new Response(
       `<head><meta name="color-scheme" content="light dark"></head>\n${error}`,
