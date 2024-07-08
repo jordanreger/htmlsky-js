@@ -13,5 +13,5 @@ communication. You can follow it at
 
 ## Contributing
 
-Send patches/bug reports to <~jordanreger/public-inbox@lists.sr.ht> with the
-subject `[PATCH] htmlsky`
+Send patches/bug reports to <~jordanreger/htmlsky@lists.sr.ht> with the
+subject `[PATCH] {what you're fixing}`
