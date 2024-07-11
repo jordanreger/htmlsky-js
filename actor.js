@@ -29,7 +29,7 @@ export default class Actor {
 
     actor.username = actor.displayName ? actor.displayName : actor.handle;
     actor.avatar = actor.avatar ? actor.avatar : "/static/avatar.jpg";
-    actor.description = actor.description ? `<tr><td colspan="2"><p>${await getFacets(actor.description).then((res) => res.replaceAll("\n", "<br>"))}</p></td></tr><tr><td colspan="2">&nbsp;</td></tr>` : "";
+    actor.description = actor.description ? `<tr><td colspan="2"><p>${getFacets(actor.description)}</p></td></tr><tr><td colspan="2">&nbsp;</td></tr>` : "";
 
     return `
     <head>
@@ -88,6 +88,7 @@ export default class Actor {
 	  </td></tr>
 	  `);
 	} else {
+	  const text = reply.record.text ? `<p>${getFacets(reply.record.text, reply.record.facets)}</p>` : "";
 	  feedList.push(`
 	  <tr>
 	    <td>
@@ -96,7 +97,7 @@ export default class Actor {
 		  <b>${reply.author.displayName ? reply.author.displayName : reply.author.handle}</b> (<a href="/profile/${reply.author.handle !== "handle.invalid" ? reply.author.handle : reply.author.did}/">@${reply.author.handle}</a>) &middot; ${DateTimeFormat.format(new Date(reply.record.createdAt))}
 		</td></tr>
 		<tr><td>
-		  <p>${await getFacets(reply.record.text).then((res) => res.replaceAll("\n", "<br>"))}</p>
+		${text}
 		</td></tr>
 		<tr><td>
 		  <b>${reply.replyCount}</b> replies &middot;
@@ -113,6 +114,34 @@ export default class Actor {
       const record = post.post.record;
       const author = post.post.author;
 
+      // Embeds
+      const embeds = [];
+      if (record.embed) {
+	const embedType = record.embed["$type"];
+
+	switch(embedType) {
+	  case "app.bsky.embed.images":
+	    embeds.push(`<ul>`);
+	    for (const image of record.embed.images) {
+	      // TODO: have a separate page for images with alt text and stuff?
+	      const embedURL = `https://cdn.bsky.app/img/feed_fullsize/plain/${author.did}/${image.image.ref}@${image.image.mimeType.split("/")[1]}`;
+	      embeds.push(`<li><a href="${embedURL}">${image.image.ref}</a> (${image.image.mimeType})</li>`);
+	    }
+	    embeds.push(`</ul>`);
+	    break;
+	  case "app.bsky.embed.record":
+	    // TODO: record embed
+	    break;
+	  case "app.bsky.embed.recordWithMedia":
+	    break;
+	  default:
+	  	embeds.push(`<pre>Missing embed type ${embedType}; <a href="https://todo.sr.ht/~jordanreger/htmlsky">please make an issue</a>.</pre>`);
+	    break;
+	}
+      }
+
+      const text = record.text ? `<p>${getFacets(record.text, record.facets)}</p>` : "";
+
       feedList.push(`
       <tr><td>
 	${post.reply ? `<blockquote>` : ``}
@@ -124,10 +153,10 @@ export default class Actor {
 	    ${DateTimeFormat.format(new Date(record.createdAt))}
 	  </td></tr>
 	  <tr><td>
-	    <p>${await getFacets(record.text).then((res) => res.replaceAll("\n", "<br>"))}</p>
+	  ${text}
 	  </td></tr>
 	  <tr><td>
-	    ${/*post.post.record.embed ? `<pre>${JSON.stringify(post.post.record.embed, null, 2)}</pre>` : */``}
+	    ${record.embed ? embeds.join("\n") : ``}
 	  </td></tr>
 	  <tr><td>
 	    <b>${post.post.replyCount}</b> replies &middot;
