@@ -7,6 +7,10 @@ import Thread from "./thread.js";
 export const agent = new AtpAgent({ service: "https://public.api.bsky.app" });
 
 Deno.serve(async (req) => {
+  // TEMPORARY: FOR BOT DETECTION ONLY
+  const headers = new Headers(req.headers);
+  console.log(headers.get("user-agent"));
+
   const url = new URL(req.url);
   const path = url.pathname;
   const redir = `${url.protocol}${url.host}`;
