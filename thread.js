@@ -8,71 +8,73 @@ const DateTimeFormat = new Intl.DateTimeFormat("en-US", {
   hour12: false,
 });
 
-export default class Actor {
-  actor;
+export default class Thread {
+  thread;
 
-  constructor(actor) {
-    this.actor = actor;
+  constructor(thread) {
+    this.thread = thread;
   }
 
-  async Profile(prevCursor) {
-    const actor = this.actor;
+  Post() {
+    const thread = this.thread;
+    const post = thread.post;
+    const author = post.author;
+    const record = post.record;
 
-    actor.displayName = actor.displayName ? actor.displayName : actor.handle;
-    actor.handle = actor.handle !== "handle.invalid" ? actor.handle : actor.did;
-    actor.avatar = actor.avatar ? actor.avatar : "/static/avatar.jpg";
+    author.displayName = author.displayName ? author.displayName : author.handle;
+    author.handle = author.handle !== "handle.invalid" ? author.handle : author.did;
+    author.avatar = author.avatar ? author.avatar : "/static/avatar.jpg";
 
-    actor.description = actor.description ? `<tr><td colspan="2"><p>${getFacets(actor.description)}</p></td></tr><tr><td colspan="2">&nbsp;</td></tr>` : "";
+
+    const text = record.text ? `<p>${getFacets(record.text, record.facets)}</p>` : "";
 
     return `
     <head>
       <meta name="color-scheme" content="light dark">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>${actor.displayName} (@${actor.handle}) &#8212; HTMLsky</title>
+      <title>${author.displayName}: ${post.record.text} &#8212; HTMLsky</title>
     </head>
     <table>
     <tr>
-      <td valign="top" height="60" width="60">
-	<img src="${actor.avatar}" alt="${actor.displayName}'s avatar" height="60" width="60">
+      <td valign="top" height="45" width="45">
+	<img src="${author.avatar}" alt="${author.displayName}'s avatar" height="45" width="45">
       </td>
       <td>
-	<h1>
-	  <span>${actor.displayName}</span><br>
-	  <small><small><small><a href="/profile/${actor.handle}">@${actor.handle}</a></small></small></small>
-	</h1>
+	<h2>
+	  <span>${author.displayName}</span><br>
+	  <small><small><a href="/profile/${author.handle}">@${author.handle}</a></small></small>
+	</h2>
       </td>
     </tr>
-    ${actor.description}
-    <tr>
-      <td colspan="2">
-	<a href="/profile/${actor.handle}/followers/"><b>${actor.followersCount}</b> followers</a>
-	<a href="/profile/${actor.handle}/follows/"><b>${actor.followsCount}</b> following</a>
-	<a href="/profile/${actor.handle}/"><b>${actor.postsCount}</b> posts</a>
-      </td>
-    </tr>
+    <tr><td colspan="2">
+    ${text}
+    </td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr><td colspan="2">
+      <i>${DateTimeFormat.format(new Date(record.createdAt))}</i>
+    </td></tr>
+    <tr><td colspan="2">
+    <b>${post.replyCount}</b> replies &middot;
+      <b>${post.repostCount}</b> reposts &middot;
+      <b>${post.likeCount}</b> likes
+    </td></tr>
     </table>
     <hr>
     `;
   }
 
-  async Feed(prevCursor) {
-    const actor = await this.actor;
-    let options = { actor: actor.did };
-    if (prevCursor) {
-      options = { actor: actor.did, cursor: prevCursor };
-    }
-    const { data } = await agent.api.app.bsky.feed.getAuthorFeed(options);
-    const { feed, cursor } = data;
-
+  async Replies(prevCursor) {
+    const thread = this.thread;
+    return `
+    <p>Replies are coming soon!</p>
+    `;
+    /*
     const feedList = [];
 
     for (const post of feed) {
       // add reply above post
       if (post.reply) {
 	const reply = post.reply.parent ? post.reply.parent : post.reply.root;
-
-	const rkey = reply.uri.split("/").at(-1);
-	
 	if (reply.notFound || reply.blocked) {
 	  feedList.push(`
 	  <tr><td>
@@ -84,18 +86,13 @@ export default class Actor {
 	  </td></tr>
 	  `);
 	} else {
-	  reply.author.displayName = reply.author.displayName ? reply.author.displayName : reply.author.handle;
-	  reply.author.handle = reply.author.handle !== "handle.invalid" ? reply.author.handle : reply.author.did;
-
 	  const text = reply.record.text ? `<p>${getFacets(reply.record.text, reply.record.facets)}</p>` : "";
 	  feedList.push(`
 	  <tr>
 	    <td>
 	      <table>
 		<tr><td>
-		  <b>${reply.author.displayName}</b> (<a href="/profile/${reply.author.handle}/">@${reply.author.handle}</a>)
-		  <a href="/profile/${reply.author.handle}/post/${rkey}/">&raquo;</a>
-		  ${DateTimeFormat.format(new Date(reply.record.createdAt))}
+		  <b>${reply.author.displayName ? reply.author.displayName : reply.author.handle}</b> (<a href="/profile/${reply.author.handle !== "handle.invalid" ? reply.author.handle : reply.author.did}/">@${reply.author.handle}</a>) &middot; ${DateTimeFormat.format(new Date(reply.record.createdAt))}
 		</td></tr>
 		<tr><td>
 		${text}
@@ -114,9 +111,6 @@ export default class Actor {
 
       const record = post.post.record;
       const author = post.post.author;
-
-
-      const rkey = post.post.uri.split("/").at(-1);
 
       // Embeds
       const embeds = [];
@@ -144,20 +138,16 @@ export default class Actor {
 	}
       }
 
-
-      author.displayName = author.displayName ? author.displayName : author.handle;
-      author.handle = author.handle !== "handle.invalid" ? author.handle : author.did;
-
       const text = record.text ? `<p>${getFacets(record.text, record.facets)}</p>` : "";
 
       feedList.push(`
       <tr><td>
 	${post.reply ? `<blockquote>` : ``}
 	<table>
-	  ${actor.did !== author.did ? `<tr><td><i>Reposted by ${actor.displayName}</i></td></tr>` : ``}
+	  ${actor.did !== author.did ? `<tr><td><i>Reposted by ${actor.displayName ? actor.displayName : actor.handle}</i></td></tr>` : ``}
 	  <tr><td>
-	    <b>${author.displayName}</b> (<a href="/profile/${author.handle}/">@${author.handle}</a>)
-	    <a href="/profile/${author.handle}/post/${rkey}/">&raquo;</a>
+	    <b>${author.displayName ? author.displayName : author.handle}</b> (<a href="/profile/${author.handle !== "handle.invalid" ? author.handle : author.did }/">@${author.handle}</a>)
+	    &middot;
 	    ${DateTimeFormat.format(new Date(record.createdAt))}
 	  </td></tr>
 	  <tr><td>
@@ -192,6 +182,7 @@ export default class Actor {
       ${feedList.join("")}
     </table>
     `;
+    */
   }
 
   async Followers(prevCursor) {
@@ -227,6 +218,7 @@ export default class Actor {
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>People following @${actor.handle} &#8212; HTMLsky</title>
     </head>
+    <p><a href="..">Back</a></p>
     <table>
       ${followersList.join("")}
     </table>
@@ -267,6 +259,7 @@ export default class Actor {
       <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>People followed by @${actor.handle} &#8212; HTMLsky</title>
     </head>
+    <p><a href="..">Back</a></p>
     <table>
       ${followsList.join("")}
     </table>
