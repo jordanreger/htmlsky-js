@@ -9,7 +9,16 @@ export const agent = new AtpAgent({ service: "https://public.api.bsky.app" });
 Deno.serve(async (req) => {
   // TEMPORARY: FOR BOT DETECTION ONLY
   const headers = new Headers(req.headers);
-  console.log(headers.get("user-agent"));
+  const ua = headers.get("user-agent");
+
+  if (
+    ua.includes("amazon") ||
+    ua.includes("facebook") ||
+    ua.includes("Bytespider") ||
+    ua.includes("bot")
+  ) {
+    return new Response("GO AWAY", {status: 403});
+  }
 
   const url = new URL(req.url);
   const path = url.pathname;
