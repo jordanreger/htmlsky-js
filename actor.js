@@ -137,7 +137,10 @@ export default class Actor {
 	    // TODO: record embed
 	    break;
 	  case "app.bsky.embed.recordWithMedia":
+	    // TODO: recordWithMedia embed
 	    break;
+	  case "app.bsky.embed.external":
+	    // TODO: external embed
 	  default:
 	  	embeds.push(`<pre>Missing embed type ${embedType}; <a href="https://todo.sr.ht/~jordanreger/htmlsky">please make an issue</a>.</pre>`);
 	    break;
