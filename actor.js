@@ -1,4 +1,4 @@
-import { agent } from "./main.js";
+import { agent, getRelativeDate } from "./main.js";
 import { getFacets } from "./facets.js";
 
 const DateTimeFormat = new Intl.DateTimeFormat("en-US", {
@@ -38,7 +38,7 @@ export default class Actor {
       <td>
 	<h1>
 	  <span>${actor.displayName}</span><br>
-	  <small><small><small><a href="/profile/${actor.handle}">@${actor.handle}</a></small></small></small>
+	  <small><small><small><a href="/profile/${actor.handle}/">@${actor.handle}</a></small></small></small>
 	</h1>
       </td>
     </tr>
@@ -93,9 +93,8 @@ export default class Actor {
 	    <td>
 	      <table>
 		<tr><td>
-		  <b>${reply.author.displayName}</b> (<a href="/profile/${reply.author.handle}/">@${reply.author.handle}</a>)
-		  <a href="/profile/${reply.author.handle}/post/${rkey}/">&raquo;</a>
-		  ${DateTimeFormat.format(new Date(reply.record.createdAt))}
+		  <b>${reply.author.displayName}</b><br><a href="/profile/${reply.author.handle}/">@${reply.author.handle}</a>
+		  / <a href="/profile/${reply.author.handle}/post/${rkey}/">${rkey}</a> 
 		</td></tr>
 		<tr><td>
 		${text}
@@ -104,6 +103,8 @@ export default class Actor {
 		  <b>${reply.replyCount}</b> replies &middot;
 		  <b>${reply.repostCount}</b> reposts &middot;
 		  <b>${reply.likeCount}</b> likes
+		  &mdash;
+		  <time title="${DateTimeFormat.format(new Date(reply.record.createdAt))}"><i>${getRelativeDate(new Date(reply.record.createdAt))}</i></time>
 		</td></tr>
 	      </table>
 	    </td>
@@ -114,7 +115,6 @@ export default class Actor {
 
       const record = post.post.record;
       const author = post.post.author;
-
 
       const rkey = post.post.uri.split("/").at(-1);
 
@@ -129,7 +129,7 @@ export default class Actor {
 	    for (const image of record.embed.images) {
 	      // TODO: have a separate page for images with alt text and stuff?
 	      const embedURL = `https://cdn.bsky.app/img/feed_fullsize/plain/${author.did}/${image.image.ref}@${image.image.mimeType.split("/")[1]}`;
-	      embeds.push(`<li><a href="${embedURL}">${image.image.ref}</a> (${image.image.mimeType})</li>`);
+	      embeds.push(`<li><a href="${embedURL}">${image.alt ? image.alt : "image"}</a></li>`);
 	    }
 	    embeds.push(`</ul>`);
 	    break;
@@ -156,9 +156,10 @@ export default class Actor {
 	<table>
 	  ${actor.did !== author.did ? `<tr><td><i>Reposted by ${actor.displayName}</i></td></tr>` : ``}
 	  <tr><td>
-	    <b>${author.displayName}</b> (<a href="/profile/${author.handle}/">@${author.handle}</a>)
-	    <a href="/profile/${author.handle}/post/${rkey}/">&raquo;</a>
-	    ${DateTimeFormat.format(new Date(record.createdAt))}
+	    <b>${author.displayName}</b><br><a href="/profile/${author.handle}/">@${author.handle}</a>
+	    / <a href="/profile/${author.handle}/post/${rkey}/">${rkey}</a>
+	  </td></tr>
+	  <tr><td>
 	  </td></tr>
 	  <tr><td>
 	  ${text}
@@ -170,6 +171,8 @@ export default class Actor {
 	    <b>${post.post.replyCount}</b> replies &middot;
 	    <b>${post.post.repostCount}</b> reposts &middot;
 	    <b>${post.post.likeCount}</b> likes
+	    &mdash;
+	    <time title="${DateTimeFormat.format(new Date(record.createdAt))}"><i>${getRelativeDate(new Date(record.createdAt))}</i></time>
 	  </td></tr>
 	</table>
 	${post.reply ? `</blockquote><hr>` : `<hr>`}

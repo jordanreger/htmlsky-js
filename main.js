@@ -109,3 +109,25 @@ const json_headers = {
     "Content-Type": "application/json;charset=utf-8",
   },
 };
+
+export const DateTimeFormat = new Intl.DateTimeFormat("en-US", {
+  dateStyle: "short",
+  timeStyle: "long",
+  timeZone: "UTC",
+  hour12: false,
+});
+
+const RelativeTimeFormat = new Intl.RelativeTimeFormat('en', {
+  numeric: 'auto',
+});
+export function getRelativeDate(date) {
+  const ms = date.getTime();
+  const deltaSeconds = Math.round((ms - Date.now()) / 1000);
+  const cutoffs = [60, 3600, 86400, 86400 * 7, 86400 * 30, 86400 * 365, Infinity];
+  const units = ["second", "minute", "hour", "day", "week", "month", "year"];
+  const unitIndex = cutoffs.findIndex(cutoff => cutoff > Math.abs(deltaSeconds));
+  const divisor = unitIndex ? cutoffs[unitIndex - 1] : 1;
+  const divided = deltaSeconds / divisor;
+  const value = divided >= 0 ? Math.floor(divided) : Math.ceil(divided);
+  return RelativeTimeFormat.format(value, units[unitIndex]);
+}
