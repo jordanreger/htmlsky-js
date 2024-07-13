@@ -10,16 +10,14 @@ Deno.serve(async (req) => {
   // TEMPORARY: FOR BOT DETECTION ONLY
   const headers = new Headers(req.headers);
   const ua = headers.get("user-agent");
-
-  console.log(ua);
-
+  
   if (
     ua.includes("amazon") ||
     ua.includes("facebook") ||
     ua.includes("Bytespider") ||
     ua.includes("bot")
   ) {
-    return new Response("GO AWAY", {status: 403});
+    return new Response(null, { status: 403 });
   }
 
   const url = new URL(req.url);
