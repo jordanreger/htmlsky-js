@@ -11,6 +11,8 @@ Deno.serve(async (req) => {
   const headers = new Headers(req.headers);
   const ua = headers.get("user-agent");
   
+  console.log(ua);
+  
   if (
     ua.includes("amazon") ||
     ua.includes("facebook") ||
