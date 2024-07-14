@@ -8,11 +8,8 @@ export const agent = new AtpAgent({ service: "https://public.api.bsky.app" });
 
 const controller = new AbortController(), signal = controller.signal;
 Deno.serve({ signal }, async (req, info) => {
-  // TEMPORARY: FOR BOT DETECTION ONLY
   const headers = new Headers(req.headers);
   const ua = headers.get("user-agent");
-  
-  console.log(ua);
   
   // Bots should receive empty reply
   if (
