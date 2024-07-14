@@ -6,20 +6,22 @@ import Thread from "./thread.js";
 
 export const agent = new AtpAgent({ service: "https://public.api.bsky.app" });
 
-Deno.serve(async (req) => {
+const controller = new AbortController(), signal = controller.signal;
+Deno.serve({ signal }, async (req, info) => {
   // TEMPORARY: FOR BOT DETECTION ONLY
   const headers = new Headers(req.headers);
   const ua = headers.get("user-agent");
   
   console.log(ua);
   
+  // Bots should receive empty reply
   if (
     ua.includes("amazon") ||
     ua.includes("facebook") ||
     ua.includes("Bytespider") ||
     ua.includes("bot")
   ) {
-    return new Response(null, { status: 403 });
+    controller.abort();
   }
 
   const url = new URL(req.url);
