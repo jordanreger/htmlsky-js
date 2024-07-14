@@ -108,7 +108,7 @@ Deno.serve({ signal }, async (req, info) => {
   }
 
   return Response.redirect(
-    `${url.protocol}${url.host}/profile/htmlsky.app/`,
+    `${url.protocol}${url.host}/profile/did:plc:sxouh4kxso3dufvnafa2zggn`,
     303,
   );
 });
