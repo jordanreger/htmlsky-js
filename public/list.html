@@ -1,0 +1,24 @@
+{{define "list"}}
+<!DOCTYPE html>
+<html>
+{{template "list_head" .}}
+
+<body>
+	{{template "list_header" .}}
+
+	<!-- list description -->
+	<h1 style="margin-bottom:0;">{{.Name}}</h1>
+	<span>by <a href="/profile/{{.Creator.Handle}}">@{{.Creator.Handle}}</a></span>
+	<p>{{.DescriptionHTML}}</p>
+	<hr>
+
+	<span id="feed"></span>
+	{{range .Feed}}
+	{{template "feed_post" .}}
+	{{end}}
+</body>
+
+</html>
+{{end}}
+
+{{template "list" .}}
